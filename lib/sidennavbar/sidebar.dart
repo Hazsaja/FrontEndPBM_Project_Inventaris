@@ -66,8 +66,6 @@ class MyDrawer extends StatelessWidget {
                 ],
               ),
             ),
-
-            // --- NAVIGATION ITEMS ---
             Expanded(
               child: ListView(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
@@ -167,7 +165,7 @@ class MyDrawer extends StatelessWidget {
                   ),
                 ),
                 onTap: () {
-                  Navigator.of(context).pushReplacementNamed('logout.php');
+                  Navigator.of(context).pushReplacementNamed('logout.dart');
                 },
               ),
             ),
