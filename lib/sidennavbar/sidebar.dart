@@ -165,7 +165,7 @@ class MyDrawer extends StatelessWidget {
                   ),
                 ),
                 onTap: () {
-                  Navigator.of(context).pushReplacementNamed('logout.dart');
+                  Navigator.of(context).pushReplacementNamed('login.dart');
                 },
               ),
             ),
