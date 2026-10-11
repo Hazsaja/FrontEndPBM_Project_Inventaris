@@ -570,7 +570,7 @@ class _PinjamDialogState extends State<PinjamDialog> {
                   ),
                 ),
                 _field(
-                  'Keterangan',
+                  'Keperluan',
                   TextFormField(
                     controller: _keperluan,
                     maxLines: 3,
