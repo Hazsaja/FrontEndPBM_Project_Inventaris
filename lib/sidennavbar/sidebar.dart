@@ -95,7 +95,7 @@ class MyDrawer extends StatelessWidget {
                     context: context,
                     icon: Icons.location_on_outlined,
                     label: 'Lokasi Penyimpanan',
-                    route: 'lokasi.dart',
+                    route: 'location_lab.dart',
                     activeColor: activeColor,
                   ),
                   _buildNavItem(

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:inventaris_v_pbm/sidennavbar/customAppBar.dart';
 import 'sidennavbar/sidebar.dart';
 import 'page/barang.dart';
+import 'page/location_lab.dart';
 //Jadi setiap kalian bikin page baru tolong diimport disini.
 void main() {
   runApp(MyApp());
@@ -20,7 +21,8 @@ class MyApp extends StatelessWidget {
         //jangan lupa masukin diroute sesuai contoh.
         //untuk nama kayak main.dart itu bisa lihat di sidebar.dart
         'main.dart': (context) => HomePage(),
-        'barang.dart': (context) => Barang()
+        'barang.dart': (context) => Barang(),
+        'location_lab.dart': (context) => LocationLab(),
       },
     );
   }
