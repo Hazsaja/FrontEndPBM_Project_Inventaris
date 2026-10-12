@@ -5,6 +5,7 @@ import 'page/barang.dart';
 import 'page/location_lab.dart';
 import 'page/katalog.dart';
 import 'page/login.dart';
+import 'page/kategori.dart';
 
 //Jadi setiap kalian bikin page baru tolong diimport disini.
 void main() {
@@ -27,6 +28,7 @@ class MyApp extends StatelessWidget {
         'barang.dart': (context) => Barang(),
         'location_lab.dart': (context) => LocationLab(),
         'katalog.dart': (context) => Katalog(),
+        'kategori.dart': (context) => KategoriPage(),
       },
     );
   }
