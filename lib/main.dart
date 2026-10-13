@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:inventaris_v_pbm/sidennavbar/customAppBar.dart';
+import 'package:inventaris_v_pbm/auth/role_guard.dart';
+import 'package:inventaris_v_pbm/page/belum_tersedia.dart';
+import 'package:inventaris_v_pbm/page/dashboard_user.dart';
+import 'package:inventaris_v_pbm/page/users.dart';
+import 'package:inventaris_v_pbm/sidennavbar/current_user_app_bar.dart';
+import 'package:inventaris_v_pbm/page/profil.dart';
 import 'sidennavbar/sidebar.dart';
 import 'page/barang.dart';
-import 'page/location_lab.dart';
+import 'page/lokasi.dart';
 import 'page/katalog.dart';
 import 'page/login.dart';
 import 'page/kategori.dart';
@@ -26,10 +32,29 @@ class MyApp extends StatelessWidget {
         'login.dart': (context) => LoginPage(),
         'main.dart': (context) => HomePage(),
         'barang.dart': (context) => Barang(),
-        'location_lab.dart': (context) => LocationLab(),
+        'lokasi.dart': (context) => LocationLab(),
         'katalog.dart': (context) => Katalog(),
         'kategori.dart': (context) => KategoriPage(),
+        'users.dart': (context) => RoleGuard(
+              access: PageAccess.adminOnly,
+              child: const UsersPage(),
+            ),
+        'profil_admin.dart': (context) => RoleGuard(
+              access: PageAccess.adminOnly,
+              child: const ProfilePage(currentRoute: 'profil_admin.dart'),
+            ),
+        'dashboard_user.dart': (context) => RoleGuard(
+              access: PageAccess.userOnly,
+              child: const DashboardUserPage(),
+            ),
+        'profil_user.dart': (context) => RoleGuard(
+              access: PageAccess.userOnly,
+              child: const ProfilePage(currentRoute: 'profil_user.dart'),
+            ),
       },
+      onUnknownRoute: (settings) => MaterialPageRoute(
+        builder: (_) => BelumTersediaPage(routeName: settings.name ?? '-'),
+      ),
     );
   }
 }

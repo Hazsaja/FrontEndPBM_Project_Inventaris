@@ -1,79 +1,190 @@
 import 'package:flutter/material.dart';
+import 'package:inventaris_v_pbm/auth/auth_service.dart';
+import 'package:inventaris_v_pbm/auth/form_widgets.dart';
+import 'package:inventaris_v_pbm/auth/validators.dart';
+import 'package:inventaris_v_pbm/data/user_repository.dart';
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
+
+  @override
+  State<LoginPage> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  final _formKey = GlobalKey<FormState>();
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+  bool _obscurePassword = true;
+  String? _errorMessage;
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
+  void _submit() {
+    setState(() => _errorMessage = null);
+    if (!_formKey.currentState!.validate()) return;
+
+    try {
+      final account = AuthService.instance.login(
+        _emailController.text,
+        _passwordController.text,
+      );
+      Navigator.of(context).pushNamedAndRemoveUntil(
+        homeRouteFor(account.role),
+        (route) => false,
+      );
+    } on AppException catch (e) {
+      setState(() => _errorMessage = e.message);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF1F5F9),
-      body: Center(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(24),
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 380),
-            child: Container(
-              padding: const EdgeInsets.all(24),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                border: Border.all(color: const Color(0xFFE2E8F0)),
-                borderRadius: BorderRadius.circular(16),
-              ),
+      backgroundColor: Colors.white,
+      body: SafeArea(
+        child: Center(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(24),
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 420),
               child: Column(
-                mainAxisSize: MainAxisSize.min,
                 children: [
                   Container(
-                    width: 56,
-                    height: 56,
+                    width: 88,
+                    height: 88,
                     decoration: BoxDecoration(
-                      color: const Color(0xFF3B82F6),
-                      borderRadius: BorderRadius.circular(14),
+                      color: kPrimaryBlue,
+                      borderRadius: BorderRadius.circular(20),
                     ),
-                    child: const Icon(Icons.inventory_2,
-                        color: Colors.white, size: 30),
+                    child: const Icon(
+                      Icons.inventory_2,
+                      color: Colors.white,
+                      size: 44,
+                    ),
                   ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: 24),
                   const Text(
-                    'Lab Inventory',
+                    'Sistem Manajemen Inventaris Laboratorium',
+                    textAlign: TextAlign.center,
                     style: TextStyle(
-                      fontSize: 22,
+                      color: kTextDark,
+                      fontSize: 18,
                       fontWeight: FontWeight.w600,
-                      color: Color(0xFF0F172A),
                     ),
                   ),
                   const SizedBox(height: 4),
                   const Text(
-                    'Pilih peran untuk masuk',
-                    style: TextStyle(color: Color(0xFF64748B)),
+                    'Universitas Singaperbangsa Karawang',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(color: kTextMuted, fontSize: 13),
                   ),
-                  const SizedBox(height: 24),
-                  SizedBox(
+                  const SizedBox(height: 32),
+                  Container(
                     width: double.infinity,
-                    child: ElevatedButton.icon(
-                      onPressed: () {
-                        Navigator.pushReplacementNamed(context, 'main.dart');
-                      },
-                      icon: const Icon(Icons.admin_panel_settings_outlined),
-                      label: const Text('Masuk sebagai Admin'),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF1E3A8A),
-                        foregroundColor: Colors.white,
-                        padding: const EdgeInsets.symmetric(vertical: 14),
-                      ),
+                    padding: const EdgeInsets.all(24),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      border: Border.all(color: kBorder),
+                      borderRadius: BorderRadius.circular(16),
                     ),
-                  ),
-                  const SizedBox(height: 12),
-                  SizedBox(
-                    width: double.infinity,
-                    child: OutlinedButton.icon(
-                      onPressed: () {
-                        Navigator.pushReplacementNamed(context, 'katalog.dart');
-                      },
-                      icon: const Icon(Icons.school_outlined),
-                      label: const Text('Masuk sebagai Mahasiswa'),
-                      style: OutlinedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(vertical: 14),
-                      ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'Login ke Sistem',
+                          style: TextStyle(
+                            color: kTextDark,
+                            fontSize: 20,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        const Text(
+                          'Silakan masuk menggunakan akun Anda',
+                          style: TextStyle(color: kTextMuted, fontSize: 13),
+                        ),
+                        const SizedBox(height: 20),
+                        if (_errorMessage != null) ...[
+                          FormErrorBanner(message: _errorMessage!),
+                          const SizedBox(height: 16),
+                        ],
+                        Form(
+                          key: _formKey,
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              labeledField(
+                                'Email',
+                                TextFormField(
+                                  controller: _emailController,
+                                  keyboardType: TextInputType.emailAddress,
+                                  decoration: inputDecoration(
+                                    hintText: 'email@unsika.ac.id',
+                                  ),
+                                  validator: Validators.email,
+                                ),
+                              ),
+                              const SizedBox(height: 16),
+                              labeledField(
+                                'Password',
+                                TextFormField(
+                                  controller: _passwordController,
+                                  obscureText: _obscurePassword,
+                                  decoration: inputDecoration(
+                                    hintText: 'Masukkan password',
+                                    suffixIcon: IconButton(
+                                      tooltip: _obscurePassword
+                                          ? 'Tampilkan password'
+                                          : 'Sembunyikan password',
+                                      icon: Icon(
+                                        _obscurePassword
+                                            ? Icons.visibility_outlined
+                                            : Icons.visibility_off_outlined,
+                                        color: kTextMuted,
+                                      ),
+                                      onPressed: () => setState(
+                                        () => _obscurePassword = !_obscurePassword,
+                                      ),
+                                    ),
+                                  ),
+                                  validator: (value) =>
+                                      Validators.requiredField(value, 'Password'),
+                                  onFieldSubmitted: (_) => _submit(),
+                                ),
+                              ),
+                              const SizedBox(height: 24),
+                              SizedBox(
+                                width: double.infinity,
+                                height: 48,
+                                child: FilledButton(
+                                  onPressed: _submit,
+                                  style: FilledButton.styleFrom(
+                                    backgroundColor: kPrimaryBlue,
+                                    foregroundColor: Colors.white,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                  ),
+                                  child: const Text(
+                                    'Login',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ],

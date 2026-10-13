@@ -44,7 +44,12 @@ const List<String> daftarKategori = [
   'Mikrokontroler',
   'Sensor',
 ];
-const List<String> daftarLokasi = ['Gudang', 'Rak A', 'Rak B', 'Rak C'];
+const List<String> daftarLokasi = [
+  'Gudang',
+  'Rak A',
+  'Rak B',
+  'Rak C',
+];
 const List<String> daftarLab = ['Laboratorium Informatika'];
 const List<String> daftarKondisi = ['Baik', 'Rusak Ringan', 'Rusak Berat'];
 
@@ -216,7 +221,9 @@ class GambarBarang extends StatelessWidget {
         return SizedBox(
           width: lebar,
           height: tinggi,
-          child: const Center(child: CircularProgressIndicator(strokeWidth: 2)),
+          child: const Center(
+            child: CircularProgressIndicator(strokeWidth: 2),
+          ),
         );
       },
     );
@@ -327,16 +334,12 @@ void showDetailBarang(BuildContext context, ItemBarang b) {
               ],
             ),
             const SizedBox(height: 16),
-            const Text(
-              'Deskripsi',
-              style: TextStyle(color: warnaAbu, fontSize: 12),
-            ),
+            const Text('Deskripsi',
+                style: TextStyle(color: warnaAbu, fontSize: 12)),
             Text(b.deskripsi.isEmpty ? 'Tidak ada deskripsi' : b.deskripsi),
             const SizedBox(height: 16),
-            const Text(
-              'Status Stok',
-              style: TextStyle(color: warnaAbu, fontSize: 12),
-            ),
+            const Text('Status Stok',
+                style: TextStyle(color: warnaAbu, fontSize: 12)),
             const SizedBox(height: 6),
             status,
             const SizedBox(height: 8),
@@ -390,12 +393,8 @@ class KartuFilter extends StatelessWidget {
     );
   }
 
-  Widget _dropdown(
-    String semua,
-    String? nilai,
-    List<String> opsi,
-    ValueChanged<String?> onChanged,
-  ) {
+  Widget _dropdown(String semua, String? nilai, List<String> opsi,
+      ValueChanged<String?> onChanged) {
     return InputDecorator(
       decoration: dekorasi(''),
       child: DropdownButtonHideUnderline(
@@ -418,7 +417,10 @@ class KartuFilter extends StatelessWidget {
   Widget _kolom(String label, Widget isi) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: [_label(label, atas: 0), isi],
+      children: [
+        _label(label, atas: 0),
+        isi,
+      ],
     );
   }
 
@@ -492,10 +494,8 @@ class KartuFilter extends StatelessWidget {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: warnaUtama,
                   foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 24,
-                    vertical: 14,
-                  ),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
                 ),
                 child: const Text('Filter'),
               ),
@@ -504,10 +504,8 @@ class KartuFilter extends StatelessWidget {
                 onPressed: onReset,
                 style: OutlinedButton.styleFrom(
                   foregroundColor: warnaTulisan,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 24,
-                    vertical: 14,
-                  ),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
                 ),
                 child: const Text('Reset'),
               ),
@@ -615,12 +613,8 @@ class _FormBarangState extends State<FormBarang> {
     );
   }
 
-  Widget _dropdown(
-    String? nilai,
-    List<String> opsi,
-    String pesan,
-    ValueChanged<String?> onChanged,
-  ) {
+  Widget _dropdown(String? nilai, List<String> opsi, String pesan,
+      ValueChanged<String?> onChanged) {
     return DropdownButtonFormField<String>(
       value: nilai,
       isExpanded: true,
@@ -722,9 +716,7 @@ class _FormBarangState extends State<FormBarang> {
                   Text(
                     edit ? 'Edit Barang' : 'Tambah Barang Baru',
                     style: const TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w600,
-                    ),
+                        fontSize: 20, fontWeight: FontWeight.w600),
                   ),
                   IconButton(
                     onPressed: () => Navigator.pop(context),
@@ -734,7 +726,6 @@ class _FormBarangState extends State<FormBarang> {
               ),
             ),
             const Divider(height: 1, color: warnaGaris),
-
             Flexible(
               child: SingleChildScrollView(
                 padding: const EdgeInsets.all(24),
@@ -763,32 +754,20 @@ class _FormBarangState extends State<FormBarang> {
                       _dua(
                         _field(
                           'Kategori',
-                          _dropdown(
-                            _kategori,
-                            daftarKategori,
-                            'Pilih kategori',
-                            (v) => setState(() => _kategori = v),
-                          ),
+                          _dropdown(_kategori, daftarKategori, 'Pilih kategori',
+                              (v) => setState(() => _kategori = v)),
                         ),
                         _field(
                           'Lokasi',
-                          _dropdown(
-                            _lokasi,
-                            daftarLokasi,
-                            'Pilih lokasi',
-                            (v) => setState(() => _lokasi = v),
-                          ),
+                          _dropdown(_lokasi, daftarLokasi, 'Pilih lokasi',
+                              (v) => setState(() => _lokasi = v)),
                         ),
                       ),
                       _dua(
                         _field(
                           'Laboratorium',
-                          _dropdown(
-                            _lab,
-                            daftarLab,
-                            'Pilih laboratorium',
-                            (v) => setState(() => _lab = v),
-                          ),
+                          _dropdown(_lab, daftarLab, 'Pilih laboratorium',
+                              (v) => setState(() => _lab = v)),
                         ),
                         _field(
                           'Stok',
@@ -814,12 +793,8 @@ class _FormBarangState extends State<FormBarang> {
                             isExpanded: true,
                             decoration: dekorasi(''),
                             items: daftarKondisi
-                                .map(
-                                  (o) => DropdownMenuItem<String>(
-                                    value: o,
-                                    child: Text(o),
-                                  ),
-                                )
+                                .map((o) => DropdownMenuItem<String>(
+                                    value: o, child: Text(o)))
                                 .toList(),
                             onChanged: (v) =>
                                 setState(() => _kondisi = v ?? 'Baik'),
@@ -840,7 +815,6 @@ class _FormBarangState extends State<FormBarang> {
                 ),
               ),
             ),
-
             const Divider(height: 1, color: warnaGaris),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
@@ -852,9 +826,7 @@ class _FormBarangState extends State<FormBarang> {
                     style: OutlinedButton.styleFrom(
                       foregroundColor: warnaTulisan,
                       padding: const EdgeInsets.symmetric(
-                        horizontal: 24,
-                        vertical: 14,
-                      ),
+                          horizontal: 24, vertical: 14),
                     ),
                     child: const Text('Batal'),
                   ),
@@ -865,9 +837,7 @@ class _FormBarangState extends State<FormBarang> {
                       backgroundColor: warnaUtama,
                       foregroundColor: Colors.white,
                       padding: const EdgeInsets.symmetric(
-                        horizontal: 24,
-                        vertical: 14,
-                      ),
+                          horizontal: 24, vertical: 14),
                     ),
                     child: const Text('Simpan'),
                   ),
@@ -908,8 +878,7 @@ class _BarangState extends State<Barang> {
   List<ItemBarang> get _hasil {
     final String q = _fCari.toLowerCase();
     return dataBarang.where((b) {
-      final cocokCari =
-          q.isEmpty ||
+      final cocokCari = q.isEmpty ||
           b.nama.toLowerCase().contains(q) ||
           b.kode.toLowerCase().contains(q);
       final cocokKategori = _fKategori == null || b.kategori == _fKategori;
@@ -1035,14 +1004,10 @@ class _BarangState extends State<Barang> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    b.nama,
-                    style: const TextStyle(fontWeight: FontWeight.w500),
-                  ),
-                  Text(
-                    b.lab,
-                    style: const TextStyle(fontSize: 11, color: warnaAbu),
-                  ),
+                  Text(b.nama,
+                      style: const TextStyle(fontWeight: FontWeight.w500)),
+                  Text(b.lab,
+                      style: const TextStyle(fontSize: 11, color: warnaAbu)),
                 ],
               ),
             ],
@@ -1051,10 +1016,8 @@ class _BarangState extends State<Barang> {
         DataCell(Text(b.kategori)),
         DataCell(Text(b.lokasi)),
         DataCell(
-          Text(
-            '${b.stok}',
-            style: const TextStyle(fontWeight: FontWeight.bold),
-          ),
+          Text('${b.stok}',
+              style: const TextStyle(fontWeight: FontWeight.bold)),
         ),
         const DataCell(Text('Unit')),
         DataCell(lencanaKondisi(b.kondisi)),
@@ -1129,9 +1092,7 @@ class _BarangState extends State<Barang> {
                     backgroundColor: warnaUtama,
                     foregroundColor: Colors.white,
                     padding: const EdgeInsets.symmetric(
-                      horizontal: 20,
-                      vertical: 14,
-                    ),
+                        horizontal: 20, vertical: 14),
                   ),
                 ),
               ],
@@ -1166,23 +1127,18 @@ class _BarangState extends State<Barang> {
                         const Text(
                           'Daftar Barang',
                           style: TextStyle(
-                            fontSize: 17,
-                            fontWeight: FontWeight.w600,
-                          ),
+                              fontSize: 17, fontWeight: FontWeight.w600),
                         ),
                         Text.rich(
                           TextSpan(
-                            style: const TextStyle(
-                              fontSize: 13,
-                              color: warnaAbu,
-                            ),
+                            style:
+                                const TextStyle(fontSize: 13, color: warnaAbu),
                             children: [
                               const TextSpan(text: 'Total: '),
                               TextSpan(
                                 text: '${hasil.length}',
                                 style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                ),
+                                    fontWeight: FontWeight.bold),
                               ),
                               const TextSpan(text: ' Barang'),
                             ],
@@ -1198,16 +1154,11 @@ class _BarangState extends State<Barang> {
                       child: Center(
                         child: Column(
                           children: [
-                            Icon(
-                              Icons.search_off,
-                              size: 48,
-                              color: Color(0xFF94A3B8),
-                            ),
+                            Icon(Icons.search_off,
+                                size: 48, color: Color(0xFF94A3B8)),
                             SizedBox(height: 8),
-                            Text(
-                              'Tidak ada data barang ditemukan.',
-                              style: TextStyle(color: warnaAbu),
-                            ),
+                            Text('Tidak ada data barang ditemukan.',
+                                style: TextStyle(color: warnaAbu)),
                           ],
                         ),
                       ),

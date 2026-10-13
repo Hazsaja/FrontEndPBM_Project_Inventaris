@@ -65,10 +65,8 @@ class MyDrawerMahasiswa extends StatelessWidget {
             ),
             Expanded(
               child: ListView(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 8,
-                  vertical: 16,
-                ),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
                 children: [
                   _buildNavItem(
                     context: context,
@@ -118,17 +116,16 @@ class MyDrawerMahasiswa extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(16),
               decoration: const BoxDecoration(
-                border: Border(top: BorderSide(color: borderColor, width: 1)),
+                border: Border(
+                  top: BorderSide(color: borderColor, width: 1),
+                ),
               ),
               child: ListTile(
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
-                leading: const Icon(
-                  Icons.logout,
-                  color: Colors.white,
-                  size: 20,
-                ),
+                leading:
+                    const Icon(Icons.logout, color: Colors.white, size: 20),
                 title: const Text(
                   'Logout',
                   style: TextStyle(
@@ -162,7 +159,9 @@ class MyDrawerMahasiswa extends StatelessWidget {
       child: ListTile(
         selected: isActive,
         selectedTileColor: activeColor,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8),
+        ),
         leading: Icon(icon, color: Colors.white, size: 18),
         title: Text(
           label,
@@ -210,8 +209,7 @@ class _KatalogState extends State<Katalog> {
   List<ItemBarang> get _hasil {
     final String q = _fCari.toLowerCase();
     return dataBarang.where((b) {
-      final cocokCari =
-          q.isEmpty ||
+      final cocokCari = q.isEmpty ||
           b.nama.toLowerCase().contains(q) ||
           b.kode.toLowerCase().contains(q);
       final cocokKategori = _fKategori == null || b.kategori == _fKategori;
@@ -280,16 +278,11 @@ class _KatalogState extends State<Katalog> {
               children: [
                 Row(
                   children: [
-                    Lencana(
-                      b.kategori,
-                      const Color(0xFF1D4ED8),
-                      const Color(0xFFDBEAFE),
-                    ),
+                    Lencana(b.kategori, const Color(0xFF1D4ED8),
+                        const Color(0xFFDBEAFE)),
                     const SizedBox(width: 8),
-                    Text(
-                      b.lokasi,
-                      style: const TextStyle(fontSize: 12, color: warnaAbu),
-                    ),
+                    Text(b.lokasi,
+                        style: const TextStyle(fontSize: 12, color: warnaAbu)),
                   ],
                 ),
                 const SizedBox(height: 10),
@@ -314,31 +307,21 @@ class _KatalogState extends State<Katalog> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text(
-                      'Stok',
-                      style: TextStyle(fontSize: 12, color: warnaAbu),
-                    ),
+                    const Text('Stok',
+                        style: TextStyle(fontSize: 12, color: warnaAbu)),
                     habis
                         ? const Lencana(
-                            'Habis',
-                            Color(0xFFB91C1C),
-                            Color(0xFFFEE2E2),
-                          )
-                        : Lencana(
-                            '${b.stok} tersedia',
-                            const Color(0xFF15803D),
-                            const Color(0xFFDCFCE7),
-                          ),
+                            'Habis', Color(0xFFB91C1C), Color(0xFFFEE2E2))
+                        : Lencana('${b.stok} tersedia', const Color(0xFF15803D),
+                            const Color(0xFFDCFCE7)),
                   ],
                 ),
                 const SizedBox(height: 6),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text(
-                      'Kondisi',
-                      style: TextStyle(fontSize: 12, color: warnaAbu),
-                    ),
+                    const Text('Kondisi',
+                        style: TextStyle(fontSize: 12, color: warnaAbu)),
                     Text(
                       b.kondisi,
                       style: TextStyle(
@@ -360,10 +343,8 @@ class _KatalogState extends State<Katalog> {
                           padding: EdgeInsets.zero,
                           minimumSize: const Size(0, 38),
                         ),
-                        child: const Text(
-                          'Lihat Detail',
-                          style: TextStyle(fontSize: 12),
-                        ),
+                        child: const Text('Lihat Detail',
+                            style: TextStyle(fontSize: 12)),
                       ),
                     ),
                     const SizedBox(width: 8),
@@ -376,10 +357,8 @@ class _KatalogState extends State<Katalog> {
                           padding: EdgeInsets.zero,
                           minimumSize: const Size(0, 38),
                         ),
-                        child: const Text(
-                          'Pinjam',
-                          style: TextStyle(fontSize: 12),
-                        ),
+                        child: const Text('Pinjam',
+                            style: TextStyle(fontSize: 12)),
                       ),
                     ),
                   ],
@@ -446,24 +425,15 @@ class _KatalogState extends State<Katalog> {
                 ),
                 child: const Column(
                   children: [
-                    Icon(
-                      Icons.inventory_outlined,
-                      size: 48,
-                      color: Color(0xFF94A3B8),
-                    ),
+                    Icon(Icons.inventory_outlined,
+                        size: 48, color: Color(0xFF94A3B8)),
                     SizedBox(height: 8),
-                    Text(
-                      'Barang Tidak Ditemukan',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
+                    Text('Barang Tidak Ditemukan',
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.w600)),
                     SizedBox(height: 4),
-                    Text(
-                      'Tidak ada barang yang sesuai dengan pencarian.',
-                      style: TextStyle(fontSize: 13, color: warnaAbu),
-                    ),
+                    Text('Tidak ada barang yang sesuai dengan pencarian.',
+                        style: TextStyle(fontSize: 13, color: warnaAbu)),
                   ],
                 ),
               )
@@ -579,9 +549,9 @@ class _PinjamDialogState extends State<PinjamDialog> {
                   TextFormField(
                     initialValue: widget.barang.nama,
                     readOnly: true,
-                    decoration: dekorasi(
-                      '',
-                    ).copyWith(fillColor: const Color(0xFFF8FAFC)),
+                    decoration: dekorasi('').copyWith(
+                      fillColor: const Color(0xFFF8FAFC),
+                    ),
                   ),
                 ),
                 _field(
