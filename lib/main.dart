@@ -7,6 +7,9 @@ import 'package:inventaris_v_pbm/page/peminjaman.dart';
 import 'package:inventaris_v_pbm/page/pengembalian.dart';
 import 'package:inventaris_v_pbm/page/admin_peminjaman.dart';
 import 'package:inventaris_v_pbm/page/admin_pengembalian.dart';
+import 'package:inventaris_v_pbm/page/riwayat.dart';
+import 'package:inventaris_v_pbm/page/aktivitas.dart';
+import 'package:inventaris_v_pbm/page/laporan.dart';
 import 'package:inventaris_v_pbm/page/users.dart';
 import 'package:inventaris_v_pbm/sidennavbar/current_user_app_bar.dart';
 import 'package:inventaris_v_pbm/page/profil.dart';
@@ -56,6 +59,18 @@ class MyApp extends StatelessWidget {
         'admin_pengembalian.dart': (context) => RoleGuard(
               access: PageAccess.adminOnly,
               child: const AdminPengembalianPage(),
+            ),
+        'aktivitas.dart': (context) => RoleGuard(
+              access: PageAccess.adminOnly,
+              child: const AktivitasPage(),
+            ),
+        'laporan.dart': (context) => RoleGuard(
+              access: PageAccess.adminOnly,
+              child: const LaporanPage(),
+            ),
+        'riwayat.dart': (context) => RoleGuard(
+              access: PageAccess.userOnly,
+              child: const RiwayatPage(),
             ),
         'peminjaman.dart': (context) => RoleGuard(
               access: PageAccess.userOnly,
