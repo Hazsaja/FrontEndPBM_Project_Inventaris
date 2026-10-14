@@ -176,6 +176,7 @@ class GambarBarang extends StatelessWidget {
   final double lebar;
   final double tinggi;
   final double radius;
+  final BoxFit fit;
 
   const GambarBarang({
     super.key,
@@ -184,6 +185,7 @@ class GambarBarang extends StatelessWidget {
     required this.lebar,
     required this.tinggi,
     this.radius = 8,
+    this.fit = BoxFit.contain,
   });
 
   Widget _ikon() {
@@ -205,7 +207,7 @@ class GambarBarang extends StatelessWidget {
         bytes!,
         width: lebar,
         height: tinggi,
-        fit: BoxFit.cover,
+        fit: fit,
         errorBuilder: (context, error, stackTrace) => _ikon(),
       );
     }
@@ -214,7 +216,7 @@ class GambarBarang extends StatelessWidget {
       url,
       width: lebar,
       height: tinggi,
-      fit: BoxFit.cover,
+      fit: fit,
       errorBuilder: (context, error, stackTrace) => _ikon(),
       loadingBuilder: (context, child, progress) {
         if (progress == null) return child;
@@ -233,7 +235,12 @@ class GambarBarang extends StatelessWidget {
   Widget build(BuildContext context) {
     return ClipRRect(
       borderRadius: BorderRadius.circular(radius),
-      child: _isi(),
+      child: Container(
+        width: lebar,
+        height: tinggi,
+        color: Colors.white,
+        child: _isi(),
+      ),
     );
   }
 }
@@ -383,9 +390,9 @@ class KartuFilter extends StatelessWidget {
     required this.onReset,
   });
 
-  Widget _label(String teks, {double atas = 12}) {
+  Widget _label(String teks) {
     return Padding(
-      padding: EdgeInsets.only(bottom: 6, top: atas),
+      padding: const EdgeInsets.only(bottom: 6, top: 12),
       child: Text(
         teks,
         style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
@@ -414,40 +421,10 @@ class KartuFilter extends StatelessWidget {
     );
   }
 
-  Widget _kolom(String label, Widget isi) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _label(label, atas: 0),
-        isi,
-      ],
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
-    final Widget fCari = _kolom(
-      'Cari Barang',
-      TextField(
-        controller: cari,
-        decoration: dekorasi('Nama atau kode barang'),
-      ),
-    );
-    final Widget fKategori = _kolom(
-      'Kategori',
-      _dropdown('Semua Kategori', kategori, daftarKategori, onKategori),
-    );
-    final Widget fLokasi = _kolom(
-      'Lokasi',
-      _dropdown('Semua Lokasi', lokasi, daftarLokasi, onLokasi),
-    );
-    final Widget fKondisi = _kolom(
-      'Kondisi',
-      _dropdown('Semua Kondisi', kondisi, daftarKondisi, onKondisi),
-    );
-
     return Container(
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
         border: Border.all(color: warnaGaris),
@@ -456,58 +433,45 @@ class KartuFilter extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          LayoutBuilder(
-            builder: (context, c) {
-              if (c.maxWidth >= 700) {
-                return Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(child: fCari),
-                    const SizedBox(width: 16),
-                    Expanded(child: fKategori),
-                    const SizedBox(width: 16),
-                    Expanded(child: fLokasi),
-                    const SizedBox(width: 16),
-                    Expanded(child: fKondisi),
-                  ],
-                );
-              }
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  fCari,
-                  const SizedBox(height: 12),
-                  fKategori,
-                  const SizedBox(height: 12),
-                  fLokasi,
-                  const SizedBox(height: 12),
-                  fKondisi,
-                ],
-              );
-            },
+          const Text(
+            'Cari Barang',
+            style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
           ),
+          const SizedBox(height: 6),
+          TextField(
+            controller: cari,
+            decoration: dekorasi('Nama atau kode barang'),
+          ),
+          _label('Kategori'),
+          _dropdown('Semua Kategori', kategori, daftarKategori, onKategori),
+          _label('Lokasi'),
+          _dropdown('Semua Lokasi', lokasi, daftarLokasi, onLokasi),
+          _label('Kondisi'),
+          _dropdown('Semua Kondisi', kondisi, daftarKondisi, onKondisi),
           const SizedBox(height: 16),
           Row(
             children: [
-              ElevatedButton(
-                onPressed: onFilter,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: warnaUtama,
-                  foregroundColor: Colors.white,
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+              Expanded(
+                child: ElevatedButton(
+                  onPressed: onFilter,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: warnaUtama,
+                    foregroundColor: Colors.white,
+                    minimumSize: const Size(0, 48),
+                  ),
+                  child: const Text('Filter'),
                 ),
-                child: const Text('Filter'),
               ),
               const SizedBox(width: 12),
-              OutlinedButton(
-                onPressed: onReset,
-                style: OutlinedButton.styleFrom(
-                  foregroundColor: warnaTulisan,
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+              Expanded(
+                child: OutlinedButton(
+                  onPressed: onReset,
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: warnaTulisan,
+                    minimumSize: const Size(0, 48),
+                  ),
+                  child: const Text('Reset'),
                 ),
-                child: const Text('Reset'),
               ),
             ],
           ),
@@ -983,67 +947,111 @@ class _BarangState extends State<Barang> {
     );
   }
 
-  DataRow _baris(ItemBarang b) {
-    return DataRow(
-      cells: [
-        DataCell(
-          Text(b.kode, style: const TextStyle(fontWeight: FontWeight.w500)),
-        ),
-        DataCell(
+  Widget _kartu(ItemBarang b) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: const Color(0xFFF8FAFC),
+        border: Border.all(color: warnaGaris, width: 1.5),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Center(
+              child: GambarBarang(
+            url: b.gambar,
+            bytes: b.gambarBytes,
+            lebar: 110,
+            tinggi: 110,
+            radius: 10,
+          )),
+          const SizedBox(height: 14),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      b.kode,
+                      style: const TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w700,
+                        color: warnaAbu,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      b.nama,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w700,
+                        color: warnaTulisan,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 8),
+              lencanaStok(b.stok),
+            ],
+          ),
+          const SizedBox(height: 8),
+          Text(
+            '${b.kategori} · ${b.lab}',
+            style: const TextStyle(fontSize: 13, color: warnaAbu),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            'Stok ${b.stok} Unit · ${b.kondisi}',
+            style: const TextStyle(fontSize: 13, color: warnaTulisan),
+          ),
+          const SizedBox(height: 14),
           Row(
             children: [
-              GambarBarang(
-                url: b.gambar,
-                bytes: b.gambarBytes,
-                lebar: 44,
-                tinggi: 44,
-                radius: 8,
+              Expanded(
+                child: OutlinedButton(
+                  onPressed: () => showDetailBarang(context, b),
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: warnaTulisan,
+                    minimumSize: const Size(0, 44),
+                    padding: EdgeInsets.zero,
+                  ),
+                  child: const Text('Detail'),
+                ),
               ),
-              const SizedBox(width: 10),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(b.nama,
-                      style: const TextStyle(fontWeight: FontWeight.w500)),
-                  Text(b.lab,
-                      style: const TextStyle(fontSize: 11, color: warnaAbu)),
-                ],
+              const SizedBox(width: 8),
+              Expanded(
+                child: OutlinedButton(
+                  onPressed: () => _edit(b),
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: warnaTulisan,
+                    minimumSize: const Size(0, 44),
+                    padding: EdgeInsets.zero,
+                  ),
+                  child: const Text('Edit'),
+                ),
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: ElevatedButton(
+                  onPressed: () => _konfirmasiHapus(b),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFFDC2626),
+                    foregroundColor: Colors.white,
+                    minimumSize: const Size(0, 44),
+                    padding: EdgeInsets.zero,
+                  ),
+                  child: const Text('Hapus'),
+                ),
               ),
             ],
           ),
-        ),
-        DataCell(Text(b.kategori)),
-        DataCell(Text(b.lokasi)),
-        DataCell(
-          Text('${b.stok}',
-              style: const TextStyle(fontWeight: FontWeight.bold)),
-        ),
-        const DataCell(Text('Unit')),
-        DataCell(lencanaKondisi(b.kondisi)),
-        DataCell(lencanaStok(b.stok)),
-        DataCell(
-          Row(
-            children: [
-              IconButton(
-                onPressed: () => showDetailBarang(context, b),
-                icon: const Icon(Icons.visibility_outlined, size: 18),
-                color: const Color(0xFF2563EB),
-              ),
-              IconButton(
-                onPressed: () => _edit(b),
-                icon: const Icon(Icons.edit_outlined, size: 18),
-                color: const Color(0xFF16A34A),
-              ),
-              IconButton(
-                onPressed: () => _konfirmasiHapus(b),
-                icon: const Icon(Icons.delete_outline, size: 18),
-                color: const Color(0xFFDC2626),
-              ),
-            ],
-          ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
@@ -1060,42 +1068,32 @@ class _BarangState extends State<Barang> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Data Barang Laboratorium',
-                        style: TextStyle(
-                          fontSize: 22,
-                          fontWeight: FontWeight.w600,
-                          color: warnaTulisan,
-                        ),
-                      ),
-                      SizedBox(height: 4),
-                      Text(
-                        'Kelola seluruh inventaris barang laboratorium',
-                        style: TextStyle(fontSize: 13, color: warnaAbu),
-                      ),
-                    ],
-                  ),
+            const Text(
+              'Data Barang Laboratorium',
+              style: TextStyle(
+                fontSize: 22,
+                fontWeight: FontWeight.w600,
+                color: warnaTulisan,
+              ),
+            ),
+            const SizedBox(height: 4),
+            const Text(
+              'Kelola seluruh inventaris barang laboratorium',
+              style: TextStyle(fontSize: 13, color: warnaAbu),
+            ),
+            const SizedBox(height: 14),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton.icon(
+                onPressed: _tambah,
+                icon: const Icon(Icons.add, size: 18),
+                label: const Text('Tambah Barang'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: warnaUtama,
+                  foregroundColor: Colors.white,
+                  minimumSize: const Size(0, 48),
                 ),
-                const SizedBox(width: 12),
-                ElevatedButton.icon(
-                  onPressed: _tambah,
-                  icon: const Icon(Icons.add, size: 18),
-                  label: const Text('Tambah Barang'),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: warnaUtama,
-                    foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 20, vertical: 14),
-                  ),
-                ),
-              ],
+              ),
             ),
             const SizedBox(height: 16),
             KartuFilter(
@@ -1109,84 +1107,41 @@ class _BarangState extends State<Barang> {
               onFilter: _terapkanFilter,
               onReset: _resetFilter,
             ),
-            const SizedBox(height: 16),
-            Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                border: Border.all(color: warnaGaris),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text(
-                          'Daftar Barang',
-                          style: TextStyle(
-                              fontSize: 17, fontWeight: FontWeight.w600),
-                        ),
-                        Text.rich(
-                          TextSpan(
-                            style:
-                                const TextStyle(fontSize: 13, color: warnaAbu),
-                            children: [
-                              const TextSpan(text: 'Total: '),
-                              TextSpan(
-                                text: '${hasil.length}',
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.bold),
-                              ),
-                              const TextSpan(text: ' Barang'),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const Divider(height: 1, color: warnaGaris),
-                  if (hasil.isEmpty)
-                    const Padding(
-                      padding: EdgeInsets.symmetric(vertical: 48),
-                      child: Center(
-                        child: Column(
-                          children: [
-                            Icon(Icons.search_off,
-                                size: 48, color: Color(0xFF94A3B8)),
-                            SizedBox(height: 8),
-                            Text('Tidak ada data barang ditemukan.',
-                                style: TextStyle(color: warnaAbu)),
-                          ],
-                        ),
-                      ),
-                    )
-                  else
-                    SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: DataTable(
-                        dataRowMinHeight: 64,
-                        dataRowMaxHeight: 72,
-                        columnSpacing: 24,
-                        columns: const [
-                          DataColumn(label: Text('Kode')),
-                          DataColumn(label: Text('Nama Barang')),
-                          DataColumn(label: Text('Kategori')),
-                          DataColumn(label: Text('Lokasi')),
-                          DataColumn(label: Text('Stok')),
-                          DataColumn(label: Text('Satuan')),
-                          DataColumn(label: Text('Kondisi')),
-                          DataColumn(label: Text('Status')),
-                          DataColumn(label: Text('Aksi')),
-                        ],
-                        rows: hasil.map(_baris).toList(),
-                      ),
-                    ),
-                ],
+            const SizedBox(height: 20),
+            const Text(
+              'Daftar Barang',
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w700,
+                color: warnaTulisan,
               ),
             ),
+            const SizedBox(height: 2),
+            Text(
+              'Total: ${hasil.length}',
+              style: const TextStyle(fontSize: 13, color: warnaAbu),
+            ),
+            const SizedBox(height: 12),
+            if (hasil.isEmpty)
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.symmetric(vertical: 40),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  border: Border.all(color: warnaGaris),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: const Column(
+                  children: [
+                    Icon(Icons.search_off, size: 48, color: Color(0xFF94A3B8)),
+                    SizedBox(height: 8),
+                    Text('Tidak ada data barang ditemukan.',
+                        style: TextStyle(color: warnaAbu)),
+                  ],
+                ),
+              )
+            else
+              Column(children: hasil.map(_kartu).toList()),
           ],
         ),
       ),
